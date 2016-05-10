@@ -5,11 +5,11 @@ package com.jersey.config;
  */
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
-import com.jersey.mappers.AppExceptionMapper;
-import com.jersey.mappers.GenericExceptionMapper;
-import com.jersey.mappers.NotFoundExceptionMapper;
+import com.jersey.mappers.*;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
+import org.glassfish.jersey.server.validation.internal.ValidationExceptionMapper;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 public class JerseyInitialization extends ResourceConfig {
     /**
@@ -20,6 +20,9 @@ public class JerseyInitialization extends ResourceConfig {
         register(AppExceptionMapper.class);
         register(GenericExceptionMapper.class);
         register(NotFoundExceptionMapper.class);
+        register(MethodArgumentNotValidException.class);
+        register(JsonMappingExceptionMapper.class);
+        register(ConstraintViolationExceptionMapper.class);
         this.property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true);
         this.property(ServerProperties.BV_DISABLE_VALIDATE_ON_EXECUTABLE_OVERRIDE_CHECK, true);
         this.packages(true, "com.jersey.resources");

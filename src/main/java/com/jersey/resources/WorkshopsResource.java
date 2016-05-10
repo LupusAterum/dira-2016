@@ -1,5 +1,6 @@
 package com.jersey.resources;
 
+import com.jersey.mappers.AppException;
 import com.jersey.persistence.UserDAO;
 import com.jersey.persistence.WorkshopDAO;
 import com.jersey.representations.User;
@@ -44,10 +45,10 @@ public class WorkshopsResource {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Workshop getOne(@PathParam("id") long id) {
+    public Workshop getOne(@PathParam("id") long id) throws AppException {
         Workshop workshop = workshopDAO.findOne(id);
         if(workshop == null) {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
+            throw new AppException(404, 998, "Workshop with id " + id + " does not exist", null, null);
         }
         else {
             return workshop;
@@ -57,10 +58,10 @@ public class WorkshopsResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Workshop create(@Valid Workshop w) {
+    public Workshop create(@Valid Workshop w) throws AppException {
         if(w.getId() != null) {
             if(workshopDAO.findOne(w.getId()) != null) {
-                throw new WebApplicationException(Response.Status.CONFLICT);
+                throw new AppException(409, 998, "Workshop with id " + w.getId() + " already exists", null, null);
             }
         }
         return workshopDAO.save(w);
@@ -69,9 +70,9 @@ public class WorkshopsResource {
     @PUT
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Workshop update(@PathParam("id") long id, @Valid Workshop w) {
+    public Workshop update(@PathParam("id") long id, @Valid Workshop w) throws AppException {
         if(workshopDAO.findOne(id) == null) {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
+            throw new AppException(404, 998, "Workshop with id " + id + " does not exist", null, null);
         } else {
             w.setId(id);
             return workshopDAO.save(w);
@@ -80,10 +81,10 @@ public class WorkshopsResource {
 
     @DELETE
     @Path("/{id}")
-    public ResponseEntity<String> delete(@PathParam("id") long id) {
+    public ResponseEntity<String> delete(@PathParam("id") long id) throws AppException {
         Workshop w = workshopDAO.findOne(id);
         if (w== null) {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
+            throw new AppException(404, 998, "Workshop with id " + id + " does not exist", null, null);
         }
         else {
             workshopDAO.delete(w);
@@ -94,11 +95,11 @@ public class WorkshopsResource {
     @GET
     @Path("/{id}/registeredUsers")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<User> getRegisteredUsers(@PathParam("id") long id) {
+    public List<User> getRegisteredUsers(@PathParam("id") long id) throws AppException {
         Workshop w = workshopDAO.findOne(id);
         List <User> toReturn = new ArrayList<User>();
         if (w == null) {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
+            throw new AppException(404, 998, "Workshop with id " + id + " does not exist", null, null);
         }
         else {
             List<User> list = userDAO.findAll();
@@ -113,13 +114,13 @@ public class WorkshopsResource {
     @POST
     @Path("/{id}/registeredUsers")
     @Produces(MediaType.APPLICATION_JSON)
-    public boolean addWorkshopToUser(@PathParam("id") long id, @QueryParam("userId") long userId) {
+    public boolean addWorkshopToUser(@PathParam("id") long id, @QueryParam("userId") long userId) throws AppException {
         User u = userDAO.findOne(userId);
-        if(u == null) throw new WebApplicationException(Response.Status.NOT_FOUND);
+        if(u == null)throw new AppException(404, 999, "User with id " + u.getId() + " does not exist", null, null);
         Workshop w = workshopDAO.findOne(id);
-        if (w == null) throw new WebApplicationException(Response.Status.NOT_FOUND);
+        if (w == null) throw new AppException(404, 998, "Workshop with id " + w.getId() + " does not exist", null, null);
         u.setId(userId);
-        if(u.getWorkshopsSignedFor().contains(w)) throw new WebApplicationException(Response.Status.CONFLICT);
+        if(u.getWorkshopsSignedFor().contains(w)) throw new AppException(409, 999, "User with id " + u.getId() + "is already registered", null, null);
         u.getWorkshopsSignedFor().add(w);
         userDAO.save(u);
         return true;
@@ -127,11 +128,11 @@ public class WorkshopsResource {
 
     @DELETE
     @Path("/{id}/registeredUsers")
-    public void deleteWorkshopFromUser(@PathParam("id") long id, @QueryParam("userId") long userId) {
+    public void deleteWorkshopFromUser(@PathParam("id") long id, @QueryParam("userId") long userId) throws AppException {
         User u = userDAO.findOne(userId);
-        if(u == null) throw new WebApplicationException(Response.Status.NOT_FOUND);
+        if(u == null) throw new AppException(404, 999, "User with id " + u.getId() + " does not exist", null, null);
         Workshop w = workshopDAO.findOne(id);
-        if (w == null) throw new WebApplicationException(Response.Status.NOT_FOUND);
+        if (w == null) throw new AppException(404, 998, "Workshop with id " + w.getId() + " does not exist", null, null);
         u.setId(userId);
         u.getWorkshopsSignedFor().remove(w);
         userDAO.save(u);

@@ -45,10 +45,10 @@ public class UserResource {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public User getOne(@PathParam("id") long id) {
+    public User getOne(@PathParam("id") long id) throws AppException {
         User u = userDAO.findOne(id);
         if (u == null)
-            throw new NotFoundException("User with id: " + id + " was not found.");
+            throw new AppException(404, 990, "User with id " + id + " does not exist", null, null);
         return u;
     }
 
@@ -70,10 +70,10 @@ public class UserResource {
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public User update(@PathParam("id") long id, @Valid User user) {
+    public User update(@PathParam("id") long id, @Valid User user) throws AppException {
         User u = userDAO.findOne(id);
         if (u == null) {
-            throw new NotFoundException("User with id: " + id + " was not found.");
+            throw new AppException(404, 990, "User with id " + id + " does not exist", null, null);
         }
         user.setId(id);
         invoiceDataDAO.save(user.getInvoiceData());
@@ -83,10 +83,10 @@ public class UserResource {
 
     @DELETE
     @Path("/{id}")
-    public ResponseEntity<String> delete(@PathParam("id") long id) {
+    public ResponseEntity<String> delete(@PathParam("id") long id) throws AppException {
         User u = userDAO.findOne(id);
         if (u == null) {
-            throw new NotFoundException("User with id: " + id + " was not found.");
+            throw new AppException(404, 990, "User with id " + id + " does not exist", null, null);
         } else {
             tShirtInfoDAO.delete(u.gettShirtInfo());
             invoiceDataDAO.delete(u.getInvoiceData());
