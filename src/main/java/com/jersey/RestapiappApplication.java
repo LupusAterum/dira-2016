@@ -18,6 +18,7 @@ public class RestapiappApplication {
 	}
 	@Bean
 	public ServletRegistrationBean jerseyServlet() {
+
 		ServletRegistrationBean registration = new ServletRegistrationBean(new ServletContainer(), "/*");
 		registration.addInitParameter(ServletProperties.JAXRS_APPLICATION_CLASS, JerseyInitialization.class.getName());
 		return registration;

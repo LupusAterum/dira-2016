@@ -1,6 +1,7 @@
 package com.jersey.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
 
 /**
@@ -9,10 +10,13 @@ import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
 public class ObjectMapperFactory {
 
     private static ObjectMapper objectMapper;
+
     static {
         objectMapper = new ObjectMapper()
-                .registerModule(new Hibernate4Module());
+                .registerModule(new Hibernate4Module())
+                .registerModule(new SimpleModule());
     }
+
     public static ObjectMapper create() {
         return objectMapper;
     }

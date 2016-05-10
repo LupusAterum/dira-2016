@@ -1,5 +1,6 @@
 package com.jersey.resources;
 
+import com.jersey.mappers.AppException;
 import com.jersey.persistence.InvoiceDataDAO;
 import com.jersey.persistence.TShirtInfoDAO;
 import com.jersey.persistence.UserDAO;
@@ -19,7 +20,7 @@ import java.util.List;
 /**
  * Created by lupus on 09.05.16.
  */
-@Path("/user")
+@Path("/users")
 @Transactional
 @Component
 public class UserResource {
@@ -35,7 +36,6 @@ public class UserResource {
     }
 
 
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<User> getAll() {
@@ -48,14 +48,19 @@ public class UserResource {
     public User getOne(@PathParam("id") long id) {
         User u = userDAO.findOne(id);
         if (u == null)
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
+            throw new NotFoundException("User with id: " + id + " was not found.");
         return u;
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public User create(@Valid User u) {
+    public User create(@Valid User u) throws AppException {
+        if (u.getId() != null) {
+            if (userDAO.findOne(u.getId()) != null) {
+                throw new AppException(409, 999, "User with id " + u.getId() + " already exists", "error in User create(User u)", null);
+            }
+        }
         invoiceDataDAO.save(u.getInvoiceData());
         tShirtInfoDAO.save(u.gettShirtInfo());
         return userDAO.save(u);
@@ -68,7 +73,7 @@ public class UserResource {
     public User update(@PathParam("id") long id, @Valid User user) {
         User u = userDAO.findOne(id);
         if (u == null) {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
+            throw new NotFoundException("User with id: " + id + " was not found.");
         }
         user.setId(id);
         invoiceDataDAO.save(user.getInvoiceData());
@@ -78,12 +83,11 @@ public class UserResource {
 
     @DELETE
     @Path("/{id}")
-    public ResponseEntity<String> deleete(@PathParam("id") long id) {
+    public ResponseEntity<String> delete(@PathParam("id") long id) {
         User u = userDAO.findOne(id);
         if (u == null) {
-            return new ResponseEntity<String>("Not found", HttpStatus.NOT_FOUND);
-        }
-        else {
+            throw new NotFoundException("User with id: " + id + " was not found.");
+        } else {
             tShirtInfoDAO.delete(u.gettShirtInfo());
             invoiceDataDAO.delete(u.getInvoiceData());
             userDAO.delete(id);

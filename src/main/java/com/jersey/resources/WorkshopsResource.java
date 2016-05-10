@@ -58,6 +58,11 @@ public class WorkshopsResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Workshop create(@Valid Workshop w) {
+        if(w.getId() != null) {
+            if(workshopDAO.findOne(w.getId()) != null) {
+                throw new WebApplicationException(Response.Status.CONFLICT);
+            }
+        }
         return workshopDAO.save(w);
     }
 
@@ -78,7 +83,7 @@ public class WorkshopsResource {
     public ResponseEntity<String> delete(@PathParam("id") long id) {
         Workshop w = workshopDAO.findOne(id);
         if (w== null) {
-            return new ResponseEntity<>("Not found", HttpStatus.NOT_FOUND);
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
         else {
             workshopDAO.delete(w);
@@ -91,7 +96,7 @@ public class WorkshopsResource {
     @Produces(MediaType.APPLICATION_JSON)
     public List<User> getRegisteredUsers(@PathParam("id") long id) {
         Workshop w = workshopDAO.findOne(id);
-        List <User> toReturn = new ArrayList<>();
+        List <User> toReturn = new ArrayList<User>();
         if (w == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
@@ -114,6 +119,7 @@ public class WorkshopsResource {
         Workshop w = workshopDAO.findOne(id);
         if (w == null) throw new WebApplicationException(Response.Status.NOT_FOUND);
         u.setId(userId);
+        if(u.getWorkshopsSignedFor().contains(w)) throw new WebApplicationException(Response.Status.CONFLICT);
         u.getWorkshopsSignedFor().add(w);
         userDAO.save(u);
         return true;

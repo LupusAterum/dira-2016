@@ -15,7 +15,7 @@ public class TShirtInfo {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     @NotNull
-    Boolean hasTShirtReceived;
+    Boolean hasTShirtReceived = false;
     @NotNull
     String TShirtSize;
      public TShirtInfo() {
