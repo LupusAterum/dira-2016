@@ -44,7 +44,7 @@ public class ConstraintViolationExceptionMapper implements ExceptionMapper<Const
 
     private void setHttpStatus(ConstraintViolationException ex, ErrorMessage errorMessage) {
 
-        errorMessage.setStatus(Response.Status.NOT_ACCEPTABLE.getStatusCode());
+        errorMessage.setStatus(Response.Status.BAD_REQUEST.getStatusCode());
 
     }
 }
