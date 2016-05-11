@@ -14,8 +14,6 @@ See api.raml
   
 #### Additional info  
 Made for subject 'REST API Design and implementation'.  
-(c) Karol Mazurek 2016
+Licensed under GNU GPL v3
 
-Licensed under CC-BY-NC-SA.  
-
-Not for commercial use.
+Created by Karol Mazurek
