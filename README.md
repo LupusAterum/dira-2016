@@ -7,9 +7,11 @@ RESTful Webservice for simple conference management.
 * Jersey  
 * Hibernate
 * MySQL (needs connection to localhost and created database restapi -- possible to configure in SqlInitialization.java)  
+ 
+  
 #### API Description  
 See api.raml   
-
+  
 #### Additional info  
 Made for subject 'REST API Design and implementation'.  
 (c) Karol Mazurek 2016
