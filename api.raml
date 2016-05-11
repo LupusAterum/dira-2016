@@ -1,0 +1,241 @@
+#%RAML 0.8
+title: Conference Management
+version: "1.0.0"
+baseUri: "http://localhost:8080/"
+schemas: 
+    - 
+        user: '{"type":"object","$schema":"http://json-schema.org/draft-03/schema#","description":"user model","title":"user","properties":{"id":{"type":"integer","required":true,"title":"id"},"name":{"type":"string","required":true,"title":"name"},"surname":{"type":"string","required":true,"title":"surname"},"invoiceData":{"type":"object","$ref":"#/schemas/invoiceData","required":true,"title":"invoiceData"},"companyName":{"type":"string","required":true,"title":"companyName"},"jobPosition":{"type":"string","required":true,"title":"jobPosition"},"role":{"type":"string","required":true,"title":"role"},"mealType":{"type":"string","required":true,"title":"mealType"},"workshopsSignedFor":{"type":"object","$ref":"#/schemas/workshop","required":false,"title":"workshopsSignedFor"},"tShirtInfo":{"type":"object","$ref":"#/schemas/tShirtInfo","required":true,"title":"tShirtInfo"}}}'
+    - 
+        invoiceData: '{"type":"object","$schema":"http://json-schema.org/draft-03/schema#","title":"invoiceData","properties":{"id":{"type":"integer","required":true,"title":"id"},"nameOnInvoice":{"type":"string","required":true,"title":"nameOnInvoice"},"taxIdentificationNumber":{"type":"string","required":true,"title":"taxIdentificationNumber"},"street":{"type":"string","required":true,"title":"street"},"buildingNo":{"type":"string","required":true,"title":"buildingNo"},"aptNo":{"type":"string","required":false,"title":"aptNo"},"postcode":{"type":"string","required":true,"title":"postcode"},"city":{"type":"string","required":true,"title":"city"},"country":{"type":"string","required":true,"title":"country"},"stateOrProvince":{"type":"string","required":false,"title":"stateOrProvince"}}}'
+    - 
+        workshop: '{"type":"object","$schema":"http://json-schema.org/draft-03/schema#","description":"Workshop model","title":"workshop","properties":{"id":{"type":"integer","required":true,"title":"id"},"workshopName":{"type":"string","required":true,"title":"workshopName"},"description":{"type":"string","required":true,"title":"description"},"startDate":{"type":"string","required":true,"title":"startDate"},"endDate":{"type":"string","required":true,"title":"endDate"}}}'
+    - 
+        tShirtInfo: '{"type":"object","$schema":"http://json-schema.org/draft-03/schema#","title":"tShirtInfo","properties":{"id":{"type":"integer","required":true,"title":"id"},"hasShirtReceived":{"type":"boolean","required":true,"title":"hasShirtReceived"},"shirtSize":{"type":"string","required":true,"title":"shirtSize"}}}'
+/user: 
+    displayName: get user list
+    get: 
+        description: Get all users.
+        responses: 
+            "200": 
+                description: Return all users.
+                body: 
+                    application/json: 
+                        schema: user
+                        example: '[{"id":1,"name":"sample name","surname":"sample surname","invoiceData":null,"companyName":"sample companyName","jobPosition":"sample jobPosition","role":"sample role","mealType":"sample mealType","workshopsSignedFor":null,"tShirtInfo":null}]'
+    post: 
+        description: Create new user.
+        body: 
+            application/json: 
+                schema: user
+                example: '{"id":1,"name":"sample name","surname":"sample surname","invoiceData":null,"companyName":"sample companyName","jobPosition":"sample jobPosition","role":"sample role","mealType":"sample mealType","workshopsSignedFor":null,"tShirtInfo":null}'
+        responses: 
+            "200": 
+                description: Returns created user model.
+                body: 
+                    application/json: 
+                        schema: user
+                        example: '{"id":1,"name":"sample name","surname":"sample surname","invoiceData":null,"companyName":"sample companyName","jobPosition":"sample jobPosition","role":"sample role","mealType":"sample mealType","workshopsSignedFor":null,"tShirtInfo":null}'
+            "400": 
+                description: invalid request body or constraints violated (will return JSON)
+                body: 
+                    application/json: 
+            "409": 
+                description: user already exists - conflict
+                body: 
+                    application/json: 
+    put: 
+        description: method not allowed
+        responses: 
+            "405": 
+                description: method not allowed
+    delete: 
+        description: method not allowed
+        responses: 
+            "405": 
+                description: method not allowed
+/user/{id}: 
+    displayName: One user management
+    description: Gives methods to get, update and delete ONE USER.
+    uriParameters: 
+        id: 
+            displayName: id
+            type: integer
+            required: false
+            repeat: false
+    get: 
+        description: Get user with {id}.
+        responses: 
+            "200": 
+                description: Returns user with {id}.
+                body: 
+                    application/json: 
+                        schema: user
+                        example: '{"id":1,"name":"sample name","surname":"sample surname","invoiceData":null,"companyName":"sample companyName","jobPosition":"sample jobPosition","role":"sample role","mealType":"sample mealType","workshopsSignedFor":null,"tShirtInfo":null}'
+            "404": 
+                description: Indicates that user with {id} was not found.
+                body: 
+                    application/json: 
+    put: 
+        description: Updates user info with {id}.
+        body: 
+            application/json: 
+                schema: user
+                example: '{"id":1,"name":"sample name","surname":"sample surname","invoiceData":null,"companyName":"sample companyName","jobPosition":"sample jobPosition","role":"sample role","mealType":"sample mealType","workshopsSignedFor":null,"tShirtInfo":null}'
+        responses: 
+            "200": 
+                description: Returns user entry with updated data.
+                body: 
+                    application/json: 
+                        schema: user
+                        example: '{"id":1,"name":"sample name","surname":"sample surname","invoiceData":null,"companyName":"sample companyName","jobPosition":"sample jobPosition","role":"sample role","mealType":"sample mealType","workshopsSignedFor":null,"tShirtInfo":null}'
+            "400": 
+                description: invalid request body or constraints violated (will return JSON)
+                body: 
+                    application/json: 
+            "404": 
+                description: Indicate that user with id was not found.
+    delete: 
+        description: Delete user with {id}.
+        responses: 
+            "204": 
+            "404": 
+                description: User is not found in database.
+/workshops: 
+    displayName: Workshops
+    description: Creating and gettins list of all workshops.
+    get: 
+        description: get all workshops
+        responses: 
+            "200": 
+                body: 
+                    application/json: 
+                        schema: workshop
+                        example: '[{"id":1,"workshopName":"sample workshopName","description":"sample description","startDate":null,"endDate":null}]'
+    post: 
+        description: create new workshop
+        body: 
+            application/json: 
+                schema: workshop
+                example: '{"id":1,"workshopName":"sample workshopName","description":"sample description","startDate":null,"endDate":null}'
+        responses: 
+            "200": 
+                description: Indicate that workshop was created and return entity
+                body: 
+                    application/json: 
+                        schema: workshop
+                        example: '{"id":1,"workshopName":"sample workshopName","description":"sample description","startDate":null,"endDate":null}'
+            "400": 
+                description: invalid request body or constraints violated (will return JSON)
+                body: 
+                    application/json: 
+            "409": 
+                description: conflict
+                body: 
+                    application/json: 
+    put: 
+        description: not allowed here
+        responses: 
+            "405": 
+                description: method not allowed
+    delete: 
+        description: not allowed here
+        responses: 
+            "405": 
+                description: method not allowed
+/workshops/{id}: 
+    displayName: Workshop Management
+    uriParameters: 
+        id: 
+            displayName: id
+            description: workshop id
+            type: integer
+            required: false
+            repeat: false
+    get: 
+        description: get one workshop with {id}.
+        responses: 
+            "200": 
+                description: Returns one workshop entity with id {id}.
+                body: 
+                    application/json: 
+                        schema: workshop
+                        example: '{"id":1,"workshopName":"sample workshopName","description":"sample description","startDate":null,"endDate":null}'
+    put: 
+        description: update one workshop
+        body: 
+            application/json: 
+                schema: workshop
+                example: '{"id":1,"workshopName":"sample workshopName","description":"sample description","startDate":null,"endDate":null}'
+        responses: 
+            "200": 
+                description: Indicate that data was updated and return entity
+                body: 
+                    application/json: 
+                        schema: workshop
+                        example: '{"id":1,"workshopName":"sample workshopName","description":"sample description","startDate":null,"endDate":null}'
+    delete: 
+        description: Delete one workshop
+        responses: 
+            "204": 
+                description: Indicate that it was deleted.
+    post: 
+        description: method not allowed
+        responses: 
+            "405": 
+                description: This method is not allowed here.
+/workshops/{id}/registeredUsers: 
+    displayName: manage registered users
+    uriParameters: 
+        id: 
+            displayName: id
+            description: managed Workshop Id
+            type: integer
+            required: false
+            repeat: false
+    get: 
+        description: get all users that are registered to workshop
+        responses: 
+            "200": 
+                description: Returns registered users of workshop with id {id}.
+                body: 
+                    application/json: 
+                        schema: user
+                        example: '[{"id":1,"name":"sample name","surname":"sample surname","invoiceData":null,"companyName":"sample companyName","jobPosition":"sample jobPosition","role":"sample role","mealType":"sample mealType","workshopsSignedFor":null,"tShirtInfo":null}]'
+            "404": 
+                description: Indicate that workshop was not found.
+                body: 
+                    application/json: 
+    post: 
+        description: add user to workshop.
+        queryParameters: 
+            userId: 
+                displayName: userId
+                description: user's id
+                type: integer
+                required: true
+                repeat: false
+                example: "123"
+        responses: 
+            "200": 
+                description: Indicates that user is registered.
+            "404": 
+                description: Indicates that user or workshop was not found
+            "409": 
+                description: conflict
+    delete: 
+        description: delete user from workshop.
+        queryParameters: 
+            userId: 
+                displayName: userId
+                description: User's id
+                type: integer
+                required: true
+                repeat: false
+                example: "123"
+        responses: 
+            "200": 
+                description: Indicates that user with {userId} is unregistered
+            "404": 
+                description: Indicates that user or workshop was not found.
+    put: 
+        description: not necessary and not allowed here.
