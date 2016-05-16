@@ -91,7 +91,7 @@ public class UserResource {
             tShirtInfoDAO.delete(u.gettShirtInfo());
             invoiceDataDAO.delete(u.getInvoiceData());
             userDAO.delete(id);
-            return new ResponseEntity<String>("", HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>("", HttpStatus.NO_CONTENT);
         }
 
     }

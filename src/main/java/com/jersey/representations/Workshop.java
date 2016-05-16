@@ -14,15 +14,15 @@ import java.util.Date;
 public class Workshop {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
     @NotNull
-    String workshopName;
-    String description;
+    private String workshopName;
+    private String description;
     @NotNull
-    Date startDate;
+    private Date startDate;
     @NotNull
-    Date endDate;
+    private Date endDate;
 
     public Workshop() {
     }

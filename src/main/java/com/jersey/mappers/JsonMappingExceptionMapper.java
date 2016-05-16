@@ -1,15 +1,11 @@
 package com.jersey.mappers;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
 /**
  * Created by lupus on 10.05.16.
  */

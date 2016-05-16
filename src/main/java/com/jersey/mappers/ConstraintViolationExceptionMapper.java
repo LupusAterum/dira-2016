@@ -1,6 +1,5 @@
 package com.jersey.mappers;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -9,8 +8,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by lupus on 10.05.16.

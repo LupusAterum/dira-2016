@@ -1,6 +1,5 @@
 package com.jersey.mappers;
 
-import javax.ws.rs.WebApplicationException;
 
 /**
  * Created by lupus on 10.05.16.

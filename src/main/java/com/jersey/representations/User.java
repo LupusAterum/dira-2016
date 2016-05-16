@@ -1,7 +1,5 @@
 package com.jersey.representations;
 
-import org.hibernate.annotations.IndexColumn;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -14,34 +12,28 @@ import java.util.Collection;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
     @NotNull
-    String name;
+    private String name;
     @NotNull
-    String surname;
+    private String surname;
     @NotNull
     @OneToOne
-    InvoiceData invoiceData;
+    private InvoiceData invoiceData;
     @NotNull
-    String companyName;
+    private String companyName;
     @NotNull
-    String jobPosition;
+    private String jobPosition;
     @NotNull
-    String role;
+    private String role;
     @NotNull
-    String mealType;
-
-//    @OneToMany
-//            (fetch = FetchType.EAGER,  cascade = CascadeType.ALL)
-//    @JoinTable(name="User_workshops_led")
-//    @OrderColumn(name = "uwl_id")
-//    private Collection<Workshop> workshopsLed = new ArrayList<>();
+    private String mealType;
 
     @ManyToMany
-            (fetch = FetchType.EAGER,  cascade = CascadeType.ALL)
-    @JoinTable(name="User_workshops_signed")
+            (fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "User_workshops_signed")
     @OrderColumn(name = "uws_id")
-    private Collection<Workshop> workshopsSignedFor = new ArrayList();
+    private Collection<Workshop> workshopsSignedFor = new ArrayList<>();
 
     @NotNull
     @OneToOne
@@ -51,10 +43,10 @@ public class User {
     public User() {
 
     }
+
     public User(String name, String surname, InvoiceData invoiceData,
                 TShirtInfo tShirtInfo, String companyName,
                 String jobPosition, String role, String mealType,
-//                Collection<Workshop> workshopsLed,
                 Collection<Workshop> workshopsSignedFor) {
         this.name = name;
         this.surname = surname;
@@ -64,9 +56,9 @@ public class User {
         this.jobPosition = jobPosition;
         this.role = role;
         this.mealType = mealType;
-        //this.workshopsLed = workshopsLed;
         this.workshopsSignedFor = workshopsSignedFor;
     }
+
     //getters and setters
     public Long getId() {
         return id;
@@ -139,14 +131,6 @@ public class User {
     public void setMealType(String mealType) {
         this.mealType = mealType;
     }
-
-//    public Collection<Workshop> getWorkshopsLed() {
-//        return workshopsLed;
-//    }
-//
-//    public void setWorkshopsLed(Collection<Workshop> workshopsLed) {
-//        this.workshopsLed = workshopsLed;
-//    }
 
     public Collection<Workshop> getWorkshopsSignedFor() {
         return workshopsSignedFor;

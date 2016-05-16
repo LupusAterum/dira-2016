@@ -97,7 +97,7 @@ public class WorkshopsResource {
     @Produces(MediaType.APPLICATION_JSON)
     public List<User> getRegisteredUsers(@PathParam("id") long id) throws AppException {
         Workshop w = workshopDAO.findOne(id);
-        List <User> toReturn = new ArrayList<User>();
+        List <User> toReturn = new ArrayList<>();
         if (w == null) {
             throw new AppException(404, 998, "Workshop with id " + id + " does not exist", null, null);
         }
